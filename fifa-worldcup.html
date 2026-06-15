@@ -73,7 +73,7 @@
 
 <div class="note-box">
   小组赛每组 4 队单循环。<strong>每组前 2 名 + 8 个成绩最好的小组第 3 名</strong>，共 <strong>32 队</strong>晋级淘汰赛（32 强 → 16 强 → 8 强 → 4 强 → 决赛）。
-  分组依据 2025 年 12 月 5 日华盛顿官方抽签结果；比分为赛后更新。
+  分组依据 2025 年 12 月 5 日华盛顿官方抽签结果。<strong>截至 6 月 15 日：A–F 组首轮已赛完，积分榜已据真实比分更新并排序；G–L 组首轮尚未开赛。</strong>
 </div>
 
 <div class="groups" id="groups"></div>
@@ -82,7 +82,7 @@
 
 <div class="footer">
   数据来源：FIFA 官方抽签 / Wikipedia《2026 FIFA World Cup draw》。<br>
-  分组与赛制以官方为准；小组赛各轮日期为大致区间，具体场次时间以 FIFA 赛程为准。更新于 2026 年 6 月 12 日。
+  分组与赛制以官方为准；小组赛各轮日期为大致区间，具体场次时间以 FIFA 赛程为准。比分来源：FIFA / Wikipedia 各组专页。更新于 2026 年 6 月 15 日。
 </div>
 
 </div><!-- container -->
@@ -111,39 +111,78 @@ const ROUNDS = [
   { title: "第 3 轮 · 6月24–27日", pairs: [[3,0],[1,2]] },
 ];
 
+// 已踢比赛比分（截至 6月15日）：RESULTS[组][轮次序号] = 与该轮 pairs 顺序对应的 [主队进球, 客队进球]
+// A–F 组第 1 轮已踢完；G–L 组首轮自 6月15–16日起，尚未确认
+const RESULTS = {
+  A: {0:[[2,0],[2,1]]},   // 墨西哥2-0南非, 韩国2-1捷克
+  B: {0:[[1,1],[1,1]]},   // 加拿大1-1波黑, 卡塔尔1-1瑞士
+  C: {0:[[1,1],[0,1]]},   // 巴西1-1摩洛哥, 海地0-1苏格兰
+  D: {0:[[4,1],[2,0]]},   // 美国4-1巴拉圭, 澳大利亚2-0土耳其
+  E: {0:[[7,1],[1,0]]},   // 德国7-1库拉索, 科特迪瓦1-0厄瓜多尔
+  F: {0:[[2,2],[5,1]]},   // 荷兰2-2日本, 瑞典5-1突尼斯
+};
+
 const wrap = document.getElementById("groups");
 
 Object.keys(GROUPS).forEach(gid => {
   const teams = GROUPS[gid];
+  const res = RESULTS[gid] || {};
+
+  // 从比分计算积分榜
+  const st = teams.map(() => ({p:0,w:0,d:0,l:0,gf:0,ga:0}));
+  ROUNDS.forEach((r, ri) => {
+    const rr = res[ri];
+    if (!rr) return;
+    r.pairs.forEach(([h, a], pi) => {
+      const sc = rr[pi];
+      if (!sc) return;
+      const [hg, ag] = sc;
+      st[h].p++; st[a].p++;
+      st[h].gf += hg; st[h].ga += ag; st[a].gf += ag; st[a].ga += hg;
+      if (hg > ag) { st[h].w++; st[a].l++; }
+      else if (hg < ag) { st[a].w++; st[h].l++; }
+      else { st[h].d++; st[a].d++; }
+    });
+  });
+  const pts = i => st[i].w * 3 + st[i].d;
+  const gd  = i => st[i].gf - st[i].ga;
+  const order = teams.map((_, i) => i)
+    .sort((x, y) => pts(y) - pts(x) || gd(y) - gd(x) || st[y].gf - st[x].gf || x - y);
+
   const box = document.createElement("div");
   box.className = "group";
-
-  // 表头
   let html = '<div class="group-head"><span class="gid">' + gid + ' 组</span></div>';
 
-  // 积分表（赛前，全部为 0）
+  // 积分表（按积分排序）
   html += '<table class="standings"><thead><tr>' +
     '<th class="pos">#</th><th style="text-align:left;padding-left:10px;">球队</th>' +
     '<th>赛</th><th>胜</th><th>平</th><th>负</th><th>进</th><th>失</th><th>净</th><th>积分</th>' +
     '</tr></thead><tbody>';
-  teams.forEach((t, i) => {
-    const cls = (i === 1) ? ' class="qline"' : '';
+  order.forEach((ti, rank) => {
+    const s = st[ti], g = s.gf - s.ga;
+    const cls = (rank === 1) ? ' class="qline"' : '';
     html += '<tr' + cls + '>' +
-      '<td class="pos">' + (i + 1) + '</td>' +
-      '<td class="team"><span class="flag">' + t[1] + '</span>' + t[0] + '</td>' +
-      '<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>' +
+      '<td class="pos">' + (rank + 1) + '</td>' +
+      '<td class="team"><span class="flag">' + teams[ti][1] + '</span>' + teams[ti][0] + '</td>' +
+      '<td>' + s.p + '</td><td>' + s.w + '</td><td>' + s.d + '</td><td>' + s.l + '</td>' +
+      '<td>' + s.gf + '</td><td>' + s.ga + '</td>' +
+      '<td>' + (g > 0 ? '+' : '') + g + '</td><td><b>' + (s.w * 3 + s.d) + '</b></td>' +
       '</tr>';
   });
   html += '</tbody></table>';
 
-  // 赛程 / 对阵
+  // 赛程 / 对阵（已赛显示比分）
   html += '<div class="fixtures">';
-  ROUNDS.forEach(r => {
+  ROUNDS.forEach((r, ri) => {
     html += '<div class="md"><div class="md-title">' + r.title + '</div>';
-    r.pairs.forEach(([h, a]) => {
+    r.pairs.forEach(([h, a], pi) => {
+      const sc = res[ri] && res[ri][pi];
+      const mid = sc
+        ? '<span class="vs" style="color:#1b5e20;font-weight:800;font-size:13px;">' + sc[0] + ' - ' + sc[1] + '</span>'
+        : '<span class="vs">VS</span>';
       html += '<div class="match">' +
         '<span class="home">' + teams[h][0] + ' <span class="flag">' + teams[h][1] + '</span></span>' +
-        '<span class="vs">VS</span>' +
+        mid +
         '<span class="away"><span class="flag">' + teams[a][1] + '</span> ' + teams[a][0] + '</span>' +
         '</div>';
     });
