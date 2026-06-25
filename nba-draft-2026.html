@@ -97,7 +97,7 @@
 
 <h2 class="sec">首轮顺位 <small>（#1–14 乐透区 · 红色顺位）</small></h2>
 <table class="picks">
-  <thead><tr><th class="c">顺位</th><th>球员</th><th>位置</th><th>大学 / 原队</th><th>NBA 球队</th></tr></thead>
+  <thead><tr><th class="c">顺位</th><th>球员</th><th class="c">位置</th><th class="c">身高</th><th class="c">年龄</th><th class="c">场均 分/板/助</th><th>大学 / 原队</th><th>NBA 球队</th></tr></thead>
   <tbody id="rows"></tbody>
 </table>
 <p style="font-size:11px;color:#aaa;margin-top:6px;">🔵 国际/海外球员标 <span style="font-size:10px;background:#e3f2fd;color:#1565c0;border-radius:4px;padding:0 5px;font-weight:700;">国际</span>。15–30 顺位行为浅色，表示单一来源待核。</p>
@@ -111,8 +111,8 @@
 </div>
 
 <div class="footer">
-  数据来源：NBA.com / ESPN / CBS Sports / Wikipedia《2026 NBA draft》/ Tankathon。<br>
-  #1–14 多源确认；#15–30 为单一来源，球队归属/大学个别条目（如马拉、伦德博格的就读学校）建议以官方为准。更新于 2026 年 6 月 25 日。
+  数据来源：NBA.com / ESPN / Sports-Reference / RealGM / Wikipedia / Tankathon。<strong>身高 / 年龄 / 场均（得分·篮板·助攻）</strong>为选秀前最近赛季（2025-26 大学或海外联赛，每条≥2 源核对）。<br>
+  #1–14 顺位多源确认；#15–30 为单一来源、球队归属待核。备注：马拉/伦德博格/约翰逊 2025-26 赛季均效力密歇根；#5 瓦格勒出生年未查到（年龄显示 —）；#20 匡坦斯仅 4 场样本、#25 德拉雷亚为西甲 ACB 口径。更新于 2026 年 6 月 25 日。
 </div>
 
 </div><!-- container -->
@@ -124,52 +124,58 @@ const TID = {
   "勇士":"1610612744","雷霆":"1610612760","黄蜂":"1610612766","猛龙":"1610612761","马刺":"1610612759",
   "76人":"1610612755","湖人":"1610612747","凯尔特人":"1610612738","太阳":"1610612756"
 };
-// [顺位, 中文名, 英文名, 位置, 大学/原队, NBA队, 是否国际, 是否单一来源待核]
+// [顺位, 中文名, 英文名, 位置, 大学/原队, NBA队, 国际?, 单一来源待核?, 身高cm, 出生年, PPG, RPG, APG]
+// 场均=选秀前最近赛季(2025-26 大学/海外)；出生年 0=未查到
 const PICKS = [
-  [1,"AJ·迪班察","AJ Dybantsa","SF","BYU","奇才",false,false],
-  [2,"达林·彼得森","Darryn Peterson","PG/SG","堪萨斯","爵士",false,false],
-  [3,"卡梅伦·布泽尔","Cameron Boozer","PF","杜克","灰熊",false,false],
-  [4,"卡莱布·威尔逊","Caleb Wilson","PF","北卡","公牛",false,false],
-  [5,"基顿·瓦格勒","Keaton Wagler","PG/SG","伊利诺伊","快船",false,false],
-  [6,"米克尔·布朗","Mikel Brown Jr.","PG","路易斯维尔","篮网",false,false],
-  [7,"达里乌斯·阿库夫","Darius Acuff Jr.","PG","阿肯色","国王",false,false],
-  [8,"金斯顿·弗莱明斯","Kingston Flemings","PG","休斯顿","老鹰",false,false],
-  [9,"莫雷兹·约翰逊","Morez Johnson Jr.","PF/C","密歇根","独行侠",false,false],
-  [10,"布雷登·布里斯","Brayden Burries","SG/PG","亚利桑那","雄鹿",false,false],
-  [11,"亚塞尔·伦德博格","Yaxel Lendeborg","PF","密歇根","勇士",true,false],
-  [12,"阿戴·马拉","Aday Mara","C","UCLA","雷霆",true,false],
-  [13,"内特·阿门特","Nate Ament","SF","田纳西","雄鹿",false,false],
-  [14,"汉内斯·施泰因巴赫","Hannes Steinbach","PF","华盛顿大学","黄蜂",true,false],
-  [15,"戴林·斯温","Dailyn Swain","SF","得州大","公牛",false,true],
-  [16,"贝内特·斯特茨","Bennett Stirtz","PG","爱荷华","灰熊",false,true],
-  [17,"埃布卡·奥科里","Ebuka Okorie","G","斯坦福","灰熊",false,true],
-  [18,"克里斯蒂安·安德森","Christian Anderson Jr.","G","德州理工","黄蜂",true,true],
-  [19,"艾伦·格雷夫斯","Allen Graves","G","圣克拉拉","猛龙",false,true],
-  [20,"杰登·匡坦斯","Jayden Quaintance","C","肯塔基","马刺",false,true],
-  [21,"卡里姆·洛佩斯","Karim López","F","新西兰破坏者","灰熊",true,true],
-  [22,"拉巴隆·菲隆","Labaron Philon Jr.","G","阿拉巴马","76人",false,true],
-  [23,"祖比·埃吉奥福","Zuby Ejiofor","F","圣约翰","老鹰",false,true],
-  [24,"卡梅伦·卡尔","Cameron Carr","G","贝勒","湖人",false,true],
-  [25,"塞尔吉奥·德拉雷亚","Sergio de Larrea","G","瓦伦西亚(西)","独行侠",true,true],
-  [26,"塔里斯·里德","Tarris Reed Jr.","C","康涅狄格","马刺",false,true],
-  [27,"克里斯·塞纳克","Chris Cenac Jr.","C","休斯顿","凯尔特人",false,true],
-  [28,"约书亚·杰斐逊","Joshua Jefferson","F","爱荷华州立","篮网",false,true],
-  [29,"亚历克斯·卡拉班","Alex Karaban","F","康涅狄格","国王",false,true],
-  [30,"科阿·皮特","Koa Peat","PF","亚利桑那","太阳",false,true],
+  [1,"AJ·迪班察","AJ Dybantsa","SF","BYU","奇才",false,false,206,2007,25.5,6.8,3.7],
+  [2,"达林·彼得森","Darryn Peterson","PG/SG","堪萨斯","爵士",false,false,198,2007,20.2,4.2,1.6],
+  [3,"卡梅伦·布泽尔","Cameron Boozer","PF","杜克","灰熊",false,false,206,2007,22.5,10.2,4.1],
+  [4,"卡莱布·威尔逊","Caleb Wilson","PF","北卡","公牛",false,false,208,2006,19.8,9.4,2.7],
+  [5,"基顿·瓦格勒","Keaton Wagler","PG/SG","伊利诺伊","快船",false,false,198,0,17.9,5.1,4.2],
+  [6,"米克尔·布朗","Mikel Brown Jr.","PG","路易斯维尔","篮网",false,false,196,2006,18.2,3.3,4.7],
+  [7,"达里乌斯·阿库夫","Darius Acuff Jr.","PG","阿肯色","国王",false,false,191,2006,23.5,3.1,6.4],
+  [8,"金斯顿·弗莱明斯","Kingston Flemings","PG","休斯顿","老鹰",false,false,193,2007,16.1,4.1,5.2],
+  [9,"莫雷兹·约翰逊","Morez Johnson Jr.","PF/C","密歇根","独行侠",false,false,206,2006,13.1,7.3,1.2],
+  [10,"布雷登·布里斯","Brayden Burries","SG/PG","亚利桑那","雄鹿",false,false,193,2005,16.1,4.9,2.4],
+  [11,"亚塞尔·伦德博格","Yaxel Lendeborg","PF","密歇根","勇士",true,false,206,2002,15.1,6.8,3.2],
+  [12,"阿戴·马拉","Aday Mara","C","密歇根","雷霆",true,false,221,2005,12.1,6.8,2.4],
+  [13,"内特·阿门特","Nate Ament","SF","田纳西","雄鹿",false,false,208,2006,16.7,6.3,2.3],
+  [14,"汉内斯·施泰因巴赫","Hannes Steinbach","PF","华盛顿大学","黄蜂",true,false,211,2006,18.5,11.8,1.6],
+  [15,"戴林·斯温","Dailyn Swain","SF","得州大","公牛",false,true,203,2005,17.3,7.5,3.6],
+  [16,"贝内特·斯特茨","Bennett Stirtz","PG","爱荷华","灰熊",false,true,193,2003,19.8,2.6,4.4],
+  [17,"埃布卡·奥科里","Ebuka Okorie","G","斯坦福","灰熊",false,true,188,2007,23.2,3.6,3.6],
+  [18,"克里斯蒂安·安德森","Christian Anderson Jr.","G","德州理工","黄蜂",true,true,191,2006,18.5,3.0,7.4],
+  [19,"艾伦·格雷夫斯","Allen Graves","G","圣克拉拉","猛龙",false,true,206,2006,11.8,6.5,1.8],
+  [20,"杰登·匡坦斯","Jayden Quaintance","C","肯塔基","马刺",false,true,208,2007,5.0,5.0,0.5],
+  [21,"卡里姆·洛佩斯","Karim López","F","新西兰破坏者","灰熊",true,true,203,2007,11.9,6.1,1.9],
+  [22,"拉巴隆·菲隆","Labaron Philon Jr.","G","阿拉巴马","76人",false,true,193,2005,22.0,3.5,5.0],
+  [23,"祖比·埃吉奥福","Zuby Ejiofor","F","圣约翰","老鹰",false,true,206,2004,16.3,7.3,3.5],
+  [24,"卡梅伦·卡尔","Cameron Carr","G","贝勒","湖人",false,true,196,2005,18.9,5.8,2.6],
+  [25,"塞尔吉奥·德拉雷亚","Sergio de Larrea","G","瓦伦西亚(西)","独行侠",true,true,196,2005,9.3,2.9,3.6],
+  [26,"塔里斯·里德","Tarris Reed Jr.","C","康涅狄格","马刺",false,true,208,2003,14.7,9.0,2.3],
+  [27,"克里斯·塞纳克","Chris Cenac Jr.","C","休斯顿","凯尔特人",false,true,211,2007,9.0,7.9,0.7],
+  [28,"约书亚·杰斐逊","Joshua Jefferson","F","爱荷华州立","篮网",false,true,201,2003,16.4,7.4,4.8],
+  [29,"亚历克斯·卡拉班","Alex Karaban","F","康涅狄格","国王",false,true,203,2002,13.2,5.3,2.4],
+  [30,"科阿·皮特","Koa Peat","PF","亚利桑那","太阳",false,true,201,2007,14.1,5.6,2.6],
 ];
 
+const fmtH = cm => Math.floor(cm/100) + "." + String(cm%100).padStart(2,"0") + "m";
 const tb = document.getElementById("rows");
 PICKS.forEach(p => {
-  const [pk, cn, en, pos, school, team, intl, low] = p;
+  const [pk, cn, en, pos, school, team, intl, low, h, by, ppg, rpg, apg] = p;
   const tr = document.createElement("tr");
   if (pk <= 14) tr.className = "lot";
   if (low) tr.className += " lo";
   const id = TID[team];
   const logo = id ? '<img src="https://cdn.nba.com/logos/nba/' + id + '/primary/L/logo.svg" alt="">' : '';
+  const age = by ? (2026 - by) + "岁" : "—";
   tr.innerHTML =
     '<td class="pk">' + pk + '</td>' +
     '<td><span class="ply">' + cn + (intl ? '<span class="intl">国际</span>' : '') + '</span> <span class="en">' + en + '</span></td>' +
-    '<td class="pos">' + pos + '</td>' +
+    '<td class="pos c">' + pos + '</td>' +
+    '<td class="c">' + fmtH(h) + '</td>' +
+    '<td class="c">' + age + '</td>' +
+    '<td class="c"><b>' + ppg.toFixed(1) + '</b> / ' + rpg.toFixed(1) + ' / ' + apg.toFixed(1) + '</td>' +
     '<td>' + school + '</td>' +
     '<td class="team">' + logo + team + '</td>';
   tb.appendChild(tr);
