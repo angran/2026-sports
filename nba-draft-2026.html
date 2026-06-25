@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 NBA 选秀 - 首轮顺位</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif; color: #1a1a2e; background: #f5f5f5; }
+  .container { max-width: 1080px; margin: 0 auto; background: #fff; padding: 22px; min-height: 100vh; }
+  h1 { text-align: center; font-size: 25px; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #666; font-size: 14px; margin-bottom: 12px; line-height: 1.7; }
+  .subtitle a { color: #1d428a; text-decoration: none; }
+
+  .meta-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 16px; }
+  .chip { background: #eaf0fb; border-radius: 20px; padding: 6px 14px; font-size: 12.5px; color: #1d428a; font-weight: 600; }
+  .chip b { color: #c8102e; }
+
+  .note-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #8a6d00; margin-bottom: 16px; text-align: center; line-height: 1.6; }
+  .note-box strong { color: #5d4900; }
+
+  h2.sec { font-size: 18px; margin: 22px 0 10px; padding-left: 10px; border-left: 4px solid #1d428a; }
+  h2.sec small { font-size: 12px; color:#999; font-weight:600; }
+
+  /* 状元卡 */
+  .no1 { display:flex; align-items:center; gap:16px; background:linear-gradient(135deg,#1d428a,#2a5db0); color:#fff; border-radius:14px; padding:16px 20px; margin-bottom:16px; }
+  .no1 .pk { font-size:40px; font-weight:900; line-height:1; color:#ffd54f; }
+  .no1 img { width:54px; height:54px; background:rgba(255,255,255,.12); border-radius:10px; padding:4px; }
+  .no1 .info .nm { font-size:20px; font-weight:900; }
+  .no1 .info .meta { font-size:12.5px; opacity:.9; margin-top:3px; }
+  .no1 .info .meta b { color:#ffd54f; }
+
+  table.picks { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.picks th { background: #1d428a; color: #fff; font-weight: 700; padding: 8px 8px; font-size: 12px; text-align: left; }
+  table.picks th.c, table.picks td.c { text-align: center; }
+  table.picks td { padding: 7px 8px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  table.picks tr:hover { background: #f7faff; }
+  table.picks .pk { font-weight: 900; color: #1d428a; width: 30px; text-align:center; font-size:14px; }
+  table.picks tr.lot .pk { color:#c8102e; }
+  table.picks .ply { font-weight: 800; white-space: nowrap; }
+  table.picks .en { color:#888; font-weight:600; font-size:11px; }
+  table.picks .pos { color:#666; }
+  table.picks .team { white-space: nowrap; font-weight:700; }
+  table.picks .team img { width: 22px; height: 22px; vertical-align: -6px; margin-right: 5px; }
+  table.picks tr.lo td { color:#555; }
+  table.picks .intl { font-size:10px; background:#e3f2fd; color:#1565c0; border-radius:4px; padding:0 5px; margin-left:4px; font-weight:700; }
+
+  .pts { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .pts .p { background:#f7f9fc; border-radius:10px; padding:12px 14px; font-size:13px; line-height:1.6; }
+  .pts .p b { color:#1d428a; }
+
+  .footer { text-align: center; color: #aaa; font-size: 11.5px; margin-top: 24px; border-top: 1px solid #eee; padding-top: 12px; line-height: 1.7; }
+
+  @media (max-width: 760px) {
+    .container { padding: 12px; }
+    h1 { font-size: 20px; }
+    .pts { grid-template-columns: 1fr; }
+    table.picks .en { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🏀 2026 NBA 选秀</h1>
+<p class="subtitle">
+  <a href="index.html" style="font-weight:700;color:#444;">🏠 首页</a> &nbsp;|&nbsp;
+  <a href="nba-playoffs.html">NBA 季后赛</a> &nbsp;|&nbsp;
+  <a href="nba-salaries.html">NBA 薪资</a> &nbsp;|&nbsp;
+  <a href="cba-playoffs.html">CBA 季后赛</a> &nbsp;|&nbsp;
+  <a href="fifa-worldcup.html">FIFA 世界杯</a> &nbsp;|&nbsp;
+  <a href="womens-basketball-wc.html">女篮世界杯</a>
+</p>
+
+<div class="meta-bar">
+  <span class="chip">🗓 <b>6月23–24日</b></span>
+  <span class="chip">📍 巴克莱中心 · 布鲁克林</span>
+  <span class="chip">🔢 2 轮 60 顺位</span>
+  <span class="chip">🎰 状元签：🇺🇸 华盛顿奇才（14%）</span>
+  <span class="chip">✅ 已结束</span>
+</div>
+
+<!-- 状元 -->
+<div class="no1">
+  <div class="pk">#1</div>
+  <img src="https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg" alt="WAS">
+  <div class="info">
+    <div class="nm">AJ·迪班察 <span style="font-size:13px;font-weight:600;opacity:.85;">AJ Dybantsa</span></div>
+    <div class="meta">小前锋 · BYU 杨百翰大学（大一） · <b>华盛顿奇才</b> 状元 &mdash; 数年来公认最热门状元</div>
+  </div>
+</div>
+
+<div class="note-box">
+  选秀于 <strong>6 月 23–24 日</strong>在布鲁克林巴克莱中心举行，已全部结束。<strong>前 14 顺位（乐透区）</strong>经 NBA.com / CBS / 维基多源交叉确认；
+  <strong>15–30 顺位为单一来源</strong>，且选秀夜交易频繁，球队归属可能有出入，<strong>仅供参考、建议复核</strong>。
+</div>
+
+<h2 class="sec">首轮顺位 <small>（#1–14 乐透区 · 红色顺位）</small></h2>
+<table class="picks">
+  <thead><tr><th class="c">顺位</th><th>球员</th><th>位置</th><th>大学 / 原队</th><th>NBA 球队</th></tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+<p style="font-size:11px;color:#aaa;margin-top:6px;">🔵 国际/海外球员标 <span style="font-size:10px;background:#e3f2fd;color:#1565c0;border-radius:4px;padding:0 5px;font-weight:700;">国际</span>。15–30 顺位行为浅色，表示单一来源待核。</p>
+
+<h2 class="sec">看点</h2>
+<div class="pts">
+  <div class="p">⭐ <b>状元含金量高</b>：本届被视为天赋集中的一届；状元 <b>迪班察</b> 与彼得森、布泽尔构成强力前三，前 8 顺位多为后卫。</div>
+  <div class="p">🥇 <b>状元之争</b>：主要在 <b>迪班察(BYU)</b> 与 <b>彼得森(堪萨斯)</b> 之间，奇才最终选择迪班察。</div>
+  <div class="p">🌍 <b>国际球员</b>：阿戴·马拉(西班牙·雷霆#12)、施泰因巴赫(德国·黄蜂#14)、德拉雷亚(西班牙·独行侠#25)、洛佩斯(墨西哥·灰熊#21) 等。</div>
+  <div class="p">🇨🇳 <b>中国球员</b>：已查证的前 30 顺位中未见中国球员入选（次轮 31–60 未逐条核实）。</div>
+</div>
+
+<div class="footer">
+  数据来源：NBA.com / ESPN / CBS Sports / Wikipedia《2026 NBA draft》/ Tankathon。<br>
+  #1–14 多源确认；#15–30 为单一来源，球队归属/大学个别条目（如马拉、伦德博格的就读学校）建议以官方为准。更新于 2026 年 6 月 25 日。
+</div>
+
+</div><!-- container -->
+
+<script>
+const TID = {
+  "奇才":"1610612764","爵士":"1610612762","灰熊":"1610612763","公牛":"1610612741","快船":"1610612746",
+  "篮网":"1610612751","国王":"1610612758","老鹰":"1610612737","独行侠":"1610612742","雄鹿":"1610612749",
+  "勇士":"1610612744","雷霆":"1610612760","黄蜂":"1610612766","猛龙":"1610612761","马刺":"1610612759",
+  "76人":"1610612755","湖人":"1610612747","凯尔特人":"1610612738","太阳":"1610612756"
+};
+// [顺位, 中文名, 英文名, 位置, 大学/原队, NBA队, 是否国际, 是否单一来源待核]
+const PICKS = [
+  [1,"AJ·迪班察","AJ Dybantsa","SF","BYU","奇才",false,false],
+  [2,"达林·彼得森","Darryn Peterson","PG/SG","堪萨斯","爵士",false,false],
+  [3,"卡梅伦·布泽尔","Cameron Boozer","PF","杜克","灰熊",false,false],
+  [4,"卡莱布·威尔逊","Caleb Wilson","PF","北卡","公牛",false,false],
+  [5,"基顿·瓦格勒","Keaton Wagler","PG/SG","伊利诺伊","快船",false,false],
+  [6,"米克尔·布朗","Mikel Brown Jr.","PG","路易斯维尔","篮网",false,false],
+  [7,"达里乌斯·阿库夫","Darius Acuff Jr.","PG","阿肯色","国王",false,false],
+  [8,"金斯顿·弗莱明斯","Kingston Flemings","PG","休斯顿","老鹰",false,false],
+  [9,"莫雷兹·约翰逊","Morez Johnson Jr.","PF/C","密歇根","独行侠",false,false],
+  [10,"布雷登·布里斯","Brayden Burries","SG/PG","亚利桑那","雄鹿",false,false],
+  [11,"亚塞尔·伦德博格","Yaxel Lendeborg","PF","密歇根","勇士",true,false],
+  [12,"阿戴·马拉","Aday Mara","C","UCLA","雷霆",true,false],
+  [13,"内特·阿门特","Nate Ament","SF","田纳西","雄鹿",false,false],
+  [14,"汉内斯·施泰因巴赫","Hannes Steinbach","PF","华盛顿大学","黄蜂",true,false],
+  [15,"戴林·斯温","Dailyn Swain","SF","得州大","公牛",false,true],
+  [16,"贝内特·斯特茨","Bennett Stirtz","PG","爱荷华","灰熊",false,true],
+  [17,"埃布卡·奥科里","Ebuka Okorie","G","斯坦福","灰熊",false,true],
+  [18,"克里斯蒂安·安德森","Christian Anderson Jr.","G","德州理工","黄蜂",true,true],
+  [19,"艾伦·格雷夫斯","Allen Graves","G","圣克拉拉","猛龙",false,true],
+  [20,"杰登·匡坦斯","Jayden Quaintance","C","肯塔基","马刺",false,true],
+  [21,"卡里姆·洛佩斯","Karim López","F","新西兰破坏者","灰熊",true,true],
+  [22,"拉巴隆·菲隆","Labaron Philon Jr.","G","阿拉巴马","76人",false,true],
+  [23,"祖比·埃吉奥福","Zuby Ejiofor","F","圣约翰","老鹰",false,true],
+  [24,"卡梅伦·卡尔","Cameron Carr","G","贝勒","湖人",false,true],
+  [25,"塞尔吉奥·德拉雷亚","Sergio de Larrea","G","瓦伦西亚(西)","独行侠",true,true],
+  [26,"塔里斯·里德","Tarris Reed Jr.","C","康涅狄格","马刺",false,true],
+  [27,"克里斯·塞纳克","Chris Cenac Jr.","C","休斯顿","凯尔特人",false,true],
+  [28,"约书亚·杰斐逊","Joshua Jefferson","F","爱荷华州立","篮网",false,true],
+  [29,"亚历克斯·卡拉班","Alex Karaban","F","康涅狄格","国王",false,true],
+  [30,"科阿·皮特","Koa Peat","PF","亚利桑那","太阳",false,true],
+];
+
+const tb = document.getElementById("rows");
+PICKS.forEach(p => {
+  const [pk, cn, en, pos, school, team, intl, low] = p;
+  const tr = document.createElement("tr");
+  if (pk <= 14) tr.className = "lot";
+  if (low) tr.className += " lo";
+  const id = TID[team];
+  const logo = id ? '<img src="https://cdn.nba.com/logos/nba/' + id + '/primary/L/logo.svg" alt="">' : '';
+  tr.innerHTML =
+    '<td class="pk">' + pk + '</td>' +
+    '<td><span class="ply">' + cn + (intl ? '<span class="intl">国际</span>' : '') + '</span> <span class="en">' + en + '</span></td>' +
+    '<td class="pos">' + pos + '</td>' +
+    '<td>' + school + '</td>' +
+    '<td class="team">' + logo + team + '</td>';
+  tb.appendChild(tr);
+});
+</script>
+</body>
+</html>
