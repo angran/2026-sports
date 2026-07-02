@@ -65,6 +65,8 @@
     .container { padding: 12px; }
     h1 { font-size: 20px; }
   }
+  .flag { width: 22px; height: 16px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 .5px rgba(0,0,0,.2); vertical-align: -3px; }
+  .ko .m .side .flag { width: 24px; height: 18px; }
 </style>
 </head>
 <body>
@@ -96,7 +98,11 @@
 
 <h2 class="sec">🏆 淘汰赛 · 32 强 (Round of 32)</h2>
 <div class="ko" id="ko"></div>
-<p class="ko-note">绿色 = 晋级；「点」= 点球大战。16 强定于 7/4–7/7 开踢。<strong>巴拉圭点球淘汰德国、摩洛哥点球淘汰荷兰</strong>为本轮最大冷门。</p>
+<p class="ko-note">绿色 = 晋级；「点」= 点球大战。<strong>巴拉圭点球淘汰德国、摩洛哥点球淘汰荷兰</strong>为本轮最大冷门。</p>
+
+<h2 class="sec" style="border-color:#f57f17;">16 强 · 已确定对阵 (7/4 起)</h2>
+<div class="ko" id="ko16"></div>
+<p class="ko-note">由已完赛的 8 组 32 强对阵产生（对阵顺序以官方为准）；其余对阵待 7/2–7/3 剩余 32 强赛果确定。</p>
 
 <h2 class="sec">小组赛 · 各组积分榜</h2>
 <div class="groups" id="groups"></div>
@@ -113,18 +119,18 @@
 <script>
 // 每组 4 队：[中文名, 国旗emoji]，顺序为抽签 1→4 号位
 const GROUPS = {
-  A: [["墨西哥","🇲🇽"],["南非","🇿🇦"],["韩国","🇰🇷"],["捷克","🇨🇿"]],
-  B: [["加拿大","🇨🇦"],["波黑","🇧🇦"],["卡塔尔","🇶🇦"],["瑞士","🇨🇭"]],
-  C: [["巴西","🇧🇷"],["摩洛哥","🇲🇦"],["海地","🇭🇹"],["苏格兰","🏴󠁧󠁢󠁳󠁣󠁴󠁿"]],
-  D: [["美国","🇺🇸"],["巴拉圭","🇵🇾"],["澳大利亚","🇦🇺"],["土耳其","🇹🇷"]],
-  E: [["德国","🇩🇪"],["库拉索","🇨🇼"],["科特迪瓦","🇨🇮"],["厄瓜多尔","🇪🇨"]],
-  F: [["荷兰","🇳🇱"],["日本","🇯🇵"],["瑞典","🇸🇪"],["突尼斯","🇹🇳"]],
-  G: [["比利时","🇧🇪"],["埃及","🇪🇬"],["伊朗","🇮🇷"],["新西兰","🇳🇿"]],
-  H: [["西班牙","🇪🇸"],["佛得角","🇨🇻"],["沙特阿拉伯","🇸🇦"],["乌拉圭","🇺🇾"]],
-  I: [["法国","🇫🇷"],["塞内加尔","🇸🇳"],["伊拉克","🇮🇶"],["挪威","🇳🇴"]],
-  J: [["阿根廷","🇦🇷"],["阿尔及利亚","🇩🇿"],["奥地利","🇦🇹"],["约旦","🇯🇴"]],
-  K: [["葡萄牙","🇵🇹"],["刚果(金)","🇨🇩"],["乌兹别克斯坦","🇺🇿"],["哥伦比亚","🇨🇴"]],
-  L: [["英格兰","🏴󠁧󠁢󠁥󠁮󠁧󠁿"],["克罗地亚","🇭🇷"],["加纳","🇬🇭"],["巴拿马","🇵🇦"]],
+  A: [["墨西哥","mx"],["南非","za"],["韩国","kr"],["捷克","cz"]],
+  B: [["加拿大","ca"],["波黑","ba"],["卡塔尔","qa"],["瑞士","ch"]],
+  C: [["巴西","br"],["摩洛哥","ma"],["海地","ht"],["苏格兰","gb-sct"]],
+  D: [["美国","us"],["巴拉圭","py"],["澳大利亚","au"],["土耳其","tr"]],
+  E: [["德国","de"],["库拉索","cw"],["科特迪瓦","ci"],["厄瓜多尔","ec"]],
+  F: [["荷兰","nl"],["日本","jp"],["瑞典","se"],["突尼斯","tn"]],
+  G: [["比利时","be"],["埃及","eg"],["伊朗","ir"],["新西兰","nz"]],
+  H: [["西班牙","es"],["佛得角","cv"],["沙特阿拉伯","sa"],["乌拉圭","uy"]],
+  I: [["法国","fr"],["塞内加尔","sn"],["伊拉克","iq"],["挪威","no"]],
+  J: [["阿根廷","ar"],["阿尔及利亚","dz"],["奥地利","at"],["约旦","jo"]],
+  K: [["葡萄牙","pt"],["刚果(金)","cd"],["乌兹别克斯坦","uz"],["哥伦比亚","co"]],
+  L: [["英格兰","gb-eng"],["克罗地亚","hr"],["加纳","gh"],["巴拿马","pa"]],
 };
 
 // 单循环 3 轮对阵（队伍索引 0-3）及大致日期区间
@@ -152,6 +158,7 @@ const RESULTS = {
   L: {0:[[4,2],[1,0]], 1:[[0,0],[0,1]]},                   // R2 英格兰0-0加纳,巴拿马0-1克罗地亚
 };
 
+const flag = c => '<img class="flag" src="https://flagcdn.com/32x24/'+c+'.png" loading="lazy" alt="">';
 const wrap = document.getElementById("groups");
 
 Object.keys(GROUPS).forEach(gid => {
@@ -193,7 +200,7 @@ Object.keys(GROUPS).forEach(gid => {
     const cls = (rank === 1) ? ' class="qline"' : '';
     html += '<tr' + cls + '>' +
       '<td class="pos">' + (rank + 1) + '</td>' +
-      '<td class="team"><span class="flag">' + teams[ti][1] + '</span>' + teams[ti][0] + '</td>' +
+      '<td class="team">' + flag(teams[ti][1]) + teams[ti][0] + '</td>' +
       '<td>' + s.p + '</td><td>' + s.w + '</td><td>' + s.d + '</td><td>' + s.l + '</td>' +
       '<td>' + s.gf + '</td><td>' + s.ga + '</td>' +
       '<td>' + (g > 0 ? '+' : '') + g + '</td><td><b>' + (s.w * 3 + s.d) + '</b></td>' +
@@ -211,9 +218,9 @@ Object.keys(GROUPS).forEach(gid => {
         ? '<span class="vs" style="color:#1b5e20;font-weight:800;font-size:13px;">' + sc[0] + ' - ' + sc[1] + '</span>'
         : '<span class="vs">VS</span>';
       html += '<div class="match">' +
-        '<span class="home">' + teams[h][0] + ' <span class="flag">' + teams[h][1] + '</span></span>' +
+        '<span class="home">' + teams[h][0] + ' ' + flag(teams[h][1]) + '</span>' +
         mid +
-        '<span class="away"><span class="flag">' + teams[a][1] + '</span> ' + teams[a][0] + '</span>' +
+        '<span class="away">' + flag(teams[a][1]) + ' ' + teams[a][0] + '</span>' +
         '</div>';
     });
     html += '</div>';
@@ -256,10 +263,28 @@ R32.forEach(m => {
     ? '<div class="sc">' + m.sa + ' - ' + m.sb + (m.pen ? '<span class="pen">' + m.pen + '</span>' : '') + '</div>'
     : '<div class="st">' + m.st + '</div>';
   el.innerHTML =
-    '<span class="side"><span class="flag">' + (FLAG[m.a] || "") + '</span><span class="' + (m.win === "a" ? "win" : "") + '">' + m.a + '</span></span>' +
+    '<span class="side">' + flag(FLAG[m.a]) + '<span class="' + (m.win === "a" ? "win" : "") + '">' + m.a + '</span></span>' +
     mid +
-    '<span class="side b"><span class="' + (m.win === "b" ? "win" : "") + '">' + m.b + '</span><span class="flag">' + (FLAG[m.b] || "") + '</span></span>';
+    '<span class="side b"><span class="' + (m.win === "b" ? "win" : "") + '">' + m.b + '</span>' + flag(FLAG[m.b]) + '</span>';
   koWrap.appendChild(el);
+});
+
+// ===== 16 强（已确定对阵）=====
+const R16 = [
+  {a:"加拿大",b:"摩洛哥"},
+  {a:"巴西",b:"挪威"},
+  {a:"巴拉圭",b:"法国"},
+  {a:"墨西哥",b:"英格兰"},
+];
+const ko16 = document.getElementById("ko16");
+R16.forEach(m => {
+  const el = document.createElement("div");
+  el.className = "m";
+  el.innerHTML =
+    '<span class="side">' + flag(FLAG[m.a]) + '<span>' + m.a + '</span></span>' +
+    '<div class="st">7/4 起</div>' +
+    '<span class="side b"><span>' + m.b + '</span>' + flag(FLAG[m.b]) + '</span>';
+  ko16.appendChild(el);
 });
 </script>
 </body>
