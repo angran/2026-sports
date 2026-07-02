@@ -60,6 +60,22 @@
   .ko .m.done { background: #f6faf6; }
   .ko-note { text-align: center; font-size: 12px; color: #78909c; margin: 10px 0 4px; }
 
+  /* 淘汰赛对阵树（NBA 季后赛式方框+折线） */
+  .bracket-scroll { overflow-x: auto; border: 1px solid #eee; border-radius: 10px; padding: 6px 8px 10px; }
+  .bracket { position: relative; margin: 0 auto; }
+  .bracket .bk-col { position: absolute; top: 2px; text-align: center; font-size: 11px; font-weight: 800; color: #1b5e20; letter-spacing: .5px; }
+  .bracket .bk-m { position: absolute; border: 1px solid #d9dde3; border-radius: 7px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05); z-index: 2; }
+  .bracket .bk-m.done { border-color: #a5d6a7; }
+  .bracket .bk-r { display: flex; align-items: center; gap: 5px; padding: 3px 7px; font-size: 12px; line-height: 1.3; }
+  .bracket .bk-r:first-child { border-bottom: 1px solid #f0f0f0; }
+  .bracket .bk-r .flag { width: 18px; height: 13px; }
+  .bracket .bk-r .nm { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+  .bracket .bk-r .bkw { font-weight: 900; color: #1b5e20; }
+  .bracket .bk-r .bktbd { color: #b0bec5; font-weight: 600; }
+  .bracket .bk-r .bk-s { font-weight: 900; min-width: 12px; text-align: right; color: #1a1a2e; }
+  .bracket .bk-x { font-size: 9px; text-align: right; padding: 0 7px 2px; color: #c62828; font-weight: 700; }
+  .bracket .bk-x.g { color: #90a4ae; }
+
   @media (max-width: 820px) {
     .groups, .ko { grid-template-columns: 1fr; }
     .container { padding: 12px; }
@@ -96,13 +112,9 @@
   ⚠️ 部分小组末轮（D–L 组）比分暂无权威一致来源，故这几组积分榜停留在<strong>已核实轮次</strong>；各队实际晋级情况以下方 <strong>32 强对阵</strong>为准。
 </div>
 
-<h2 class="sec">🏆 淘汰赛 · 32 强 (Round of 32)</h2>
-<div class="ko" id="ko"></div>
-<p class="ko-note">绿色 = 晋级；「点」= 点球大战。<strong>巴拉圭点球淘汰德国、摩洛哥点球淘汰荷兰</strong>为本轮最大冷门。</p>
-
-<h2 class="sec" style="border-color:#f57f17;">16 强 · 已确定对阵 (7/4 起)</h2>
-<div class="ko" id="ko16"></div>
-<p class="ko-note">由已完赛的 8 组 32 强对阵产生（对阵顺序以官方为准）；其余对阵待 7/2–7/3 剩余 32 强赛果确定。</p>
+<h2 class="sec">🏆 淘汰赛对阵图 (Knockout Bracket)</h2>
+<div class="bracket-scroll"><div class="bracket" id="bracket"></div></div>
+<p class="ko-note">绿色 = 已晋级；「点」= 点球大战；✓ = 已晋级(比分待核)。<strong>巴拉圭点球淘汰德国、摩洛哥点球淘汰荷兰</strong>为最大冷门。16 强 5 场已定；8 强及以后为对阵树骨架、队伍待定；下半区部分 32 强 7/2–7/3 才结束。</p>
 
 <h2 class="sec">小组赛 · 各组积分榜</h2>
 <div class="groups" id="groups"></div>
@@ -231,60 +243,96 @@ Object.keys(GROUPS).forEach(gid => {
   wrap.appendChild(box);
 });
 
-// ===== 淘汰赛 32 强 =====
+// ===== 淘汰赛对阵树 =====
 const FLAG = {};
 Object.values(GROUPS).forEach(g => g.forEach(t => { FLAG[t[0]] = t[1]; }));
+const T = n => ({ n: n, c: FLAG[n] });
 
+// R32：顺序已排布，使相邻两场胜者进入同一 16 强（连线不交叉，且与官方已确认对阵一致）
 const R32 = [
-  {a:"南非",b:"加拿大",sa:0,sb:1,win:"b",dt:"6/28"},
-  {a:"巴西",b:"日本",sa:2,sb:1,win:"a",dt:"6/29"},
-  {a:"德国",b:"巴拉圭",sa:1,sb:1,pen:"点 3-4",win:"b",dt:"6/29"},
-  {a:"荷兰",b:"摩洛哥",sa:1,sb:1,pen:"点 2-3",win:"b",dt:"6/29"},
-  {a:"科特迪瓦",b:"挪威",sa:1,sb:2,win:"b",dt:"6/30"},
-  {a:"法国",b:"瑞典",sa:3,sb:0,win:"a",dt:"6/30"},
-  {a:"墨西哥",b:"厄瓜多尔",sa:2,sb:0,win:"a",dt:"6/30"},
-  {a:"英格兰",b:"刚果(金)",sa:2,sb:1,win:"a",dt:"7/1"},
-  {a:"美国",b:"波黑",st:"美国晋级·比分待核"},
-  {a:"比利时",b:"塞内加尔",st:"比利时加时晋级·待核"},
-  {a:"葡萄牙",b:"克罗地亚",st:"7/2 进行中"},
-  {a:"西班牙",b:"奥地利",st:"7/2 进行中"},
-  {a:"瑞士",b:"阿尔及利亚",st:"7/2 待赛"},
-  {a:"哥伦比亚",b:"加纳",st:"7/3 待赛"},
-  {a:"阿根廷",b:"佛得角",st:"7/3 待赛"},
-  {a:"澳大利亚",b:"埃及",st:"7/3 待赛"},
+  {t1:T("南非"),t2:T("加拿大"),s1:0,s2:1,win:2},
+  {t1:T("荷兰"),t2:T("摩洛哥"),s1:1,s2:1,pen:"点 2-3",win:2},
+  {t1:T("巴西"),t2:T("日本"),s1:2,s2:1,win:1},
+  {t1:T("科特迪瓦"),t2:T("挪威"),s1:1,s2:2,win:2},
+  {t1:T("德国"),t2:T("巴拉圭"),s1:1,s2:1,pen:"点 3-4",win:2},
+  {t1:T("法国"),t2:T("瑞典"),s1:3,s2:0,win:1},
+  {t1:T("墨西哥"),t2:T("厄瓜多尔"),s1:2,s2:0,win:1},
+  {t1:T("英格兰"),t2:T("刚果(金)"),s1:2,s2:1,win:1},
+  {t1:T("美国"),t2:T("波黑"),win:1,note:"待核"},
+  {t1:T("比利时"),t2:T("塞内加尔"),win:1,note:"加时·待核"},
+  {t1:T("葡萄牙"),t2:T("克罗地亚"),note:"进行中"},
+  {t1:T("西班牙"),t2:T("奥地利"),note:"进行中"},
+  {t1:T("哥伦比亚"),t2:T("加纳"),note:"7/3"},
+  {t1:T("瑞士"),t2:T("阿尔及利亚"),note:"7/3"},
+  {t1:T("阿根廷"),t2:T("佛得角"),note:"7/3"},
+  {t1:T("澳大利亚"),t2:T("埃及"),note:"7/3"},
 ];
+const wOf = m => m && m.win ? (m.win === 1 ? m.t1 : m.t2) : null;
 
-const koWrap = document.getElementById("ko");
-R32.forEach(m => {
-  const el = document.createElement("div");
-  el.className = "m" + (m.sa != null ? " done" : "");
-  if (m.dt) el.title = m.dt;
-  const mid = (m.sa != null)
-    ? '<div class="sc">' + m.sa + ' - ' + m.sb + (m.pen ? '<span class="pen">' + m.pen + '</span>' : '') + '</div>'
-    : '<div class="st">' + m.st + '</div>';
-  el.innerHTML =
-    '<span class="side">' + flag(FLAG[m.a]) + '<span class="' + (m.win === "a" ? "win" : "") + '">' + m.a + '</span></span>' +
-    mid +
-    '<span class="side b"><span class="' + (m.win === "b" ? "win" : "") + '">' + m.b + '</span>' + flag(FLAG[m.b]) + '</span>';
-  koWrap.appendChild(el);
+// 由 R32 推演后续各轮（相邻配对；未定则占位）
+const rounds = [R32];
+for (let r = 1; r < 5; r++) {
+  const prev = rounds[r-1], cur = [];
+  for (let j = 0; j < prev.length/2; j++) cur.push({ t1: wOf(prev[2*j]), t2: wOf(prev[2*j+1]) });
+  rounds.push(cur);
+}
+
+// 布局
+const BW = 138, COL = 160, UNIT = 56, BH = 40, PADT = 26;
+const totalH = PADT + R32.length*UNIT, totalW = 5*COL - (COL-BW) + 6;
+const host = document.getElementById("bracket");
+host.style.height = totalH + "px"; host.style.width = totalW + "px";
+
+const cen = [];
+rounds.forEach((round, r) => {
+  cen[r] = round.map((m, j) => r === 0 ? PADT + j*UNIT + UNIT/2 : (cen[r-1][2*j] + cen[r-1][2*j+1]) / 2);
 });
 
-// ===== 16 强（已确定对阵）=====
-const R16 = [
-  {a:"加拿大",b:"摩洛哥"},
-  {a:"巴西",b:"挪威"},
-  {a:"巴拉圭",b:"法国"},
-  {a:"墨西哥",b:"英格兰"},
-];
-const ko16 = document.getElementById("ko16");
-R16.forEach(m => {
-  const el = document.createElement("div");
-  el.className = "m";
-  el.innerHTML =
-    '<span class="side">' + flag(FLAG[m.a]) + '<span>' + m.a + '</span></span>' +
-    '<div class="st">7/4 起</div>' +
-    '<span class="side b"><span>' + m.b + '</span>' + flag(FLAG[m.b]) + '</span>';
-  ko16.appendChild(el);
+// 折线（SVG）
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.createElementNS(NS, "svg");
+svg.setAttribute("width", totalW); svg.setAttribute("height", totalH);
+svg.style.position = "absolute"; svg.style.left = "0"; svg.style.top = "0";
+for (let r = 1; r < rounds.length; r++) {
+  rounds[r].forEach((m, j) => {
+    const px = r*COL, pc = cen[r][j];
+    [2*j, 2*j+1].forEach(ci => {
+      const cx = (r-1)*COL + BW, cc = cen[r-1][ci], mx = (cx+px)/2;
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", "M " + cx + " " + cc + " H " + mx + " V " + pc + " H " + px);
+      p.setAttribute("fill", "none"); p.setAttribute("stroke", "#cbd5e0"); p.setAttribute("stroke-width", "1.5");
+      svg.appendChild(p);
+    });
+  });
+}
+host.appendChild(svg);
+
+// 列标题
+["32 强","16 强","8 强","4 强","决赛"].forEach((lab, r) => {
+  const d = document.createElement("div");
+  d.className = "bk-col"; d.style.left = (r*COL) + "px"; d.style.width = BW + "px";
+  d.textContent = lab; host.appendChild(d);
+});
+
+// 方框
+rounds.forEach((round, r) => {
+  round.forEach((m, j) => {
+    const box = document.createElement("div");
+    box.className = "bk-m" + (m.win ? " done" : "");
+    box.style.left = (r*COL) + "px"; box.style.top = (cen[r][j] - BH/2) + "px"; box.style.width = BW + "px";
+    let html = "";
+    [[m.t1, m.s1, 1], [m.t2, m.s2, 2]].forEach(([t, sc, side]) => {
+      const win = m.win === side;
+      const nm = t ? (flag(t.c) + '<span class="nm' + (win ? ' bkw' : '') + '">' + t.n + '</span>')
+                   : '<span class="nm bktbd">待定</span>';
+      const scc = (sc != null) ? sc : (win && m.note ? '✓' : '');
+      html += '<div class="bk-r">' + nm + '<span class="bk-s">' + scc + '</span></div>';
+    });
+    if (m.pen) html += '<div class="bk-x">' + m.pen + '</div>';
+    else if (m.note && m.s1 == null) html += '<div class="bk-x g">' + m.note + '</div>';
+    box.innerHTML = html;
+    host.appendChild(box);
+  });
 });
 </script>
 </body>
