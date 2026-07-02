@@ -44,8 +44,24 @@
   .legend-note { text-align:center; font-size:12px; color:#78909c; margin: 16px 0 4px; }
   .footer { text-align: center; color: #aaa; font-size: 11.5px; margin-top: 18px; border-top: 1px solid #eee; padding-top: 10px; line-height: 1.6; }
 
+  h2.sec { font-size: 18px; margin: 22px 0 12px; padding-left: 10px; border-left: 4px solid #1b5e20; }
+
+  /* 淘汰赛 32 强 */
+  .ko { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ko .m { border: 1px solid #e6e6ee; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
+  .ko .m .side { flex: 1; display: flex; align-items: center; gap: 6px; }
+  .ko .m .side.b { justify-content: flex-end; text-align: right; }
+  .ko .m .side .flag { font-size: 17px; }
+  .ko .m .win { font-weight: 900; color: #1b5e20; }
+  .ko .m .sc { min-width: 54px; text-align: center; font-weight: 900; font-size: 15px; color: #1a1a2e; }
+  .ko .m .sc .pen { display: block; font-size: 9px; font-weight: 700; color: #c62828; }
+  .ko .m .st { min-width: 54px; text-align: center; font-size: 10.5px; color: #90a4ae; font-weight: 700; line-height: 1.2; }
+  .ko .m .dt { position: absolute; }
+  .ko .m.done { background: #f6faf6; }
+  .ko-note { text-align: center; font-size: 12px; color: #78909c; margin: 10px 0 4px; }
+
   @media (max-width: 820px) {
-    .groups { grid-template-columns: 1fr; }
+    .groups, .ko { grid-template-columns: 1fr; }
     .container { padding: 12px; }
     h1 { font-size: 20px; }
   }
@@ -74,17 +90,22 @@
 </div>
 
 <div class="note-box">
-  小组赛每组 4 队单循环。<strong>每组前 2 名 + 8 个成绩最好的小组第 3 名</strong>，共 <strong>32 队</strong>晋级淘汰赛（32 强 → 16 强 → 8 强 → 4 强 → 决赛）。
-  分组依据 2025 年 12 月 5 日华盛顿官方抽签结果。<strong>截至 6 月 25 日：A/B/C 组小组赛收官（墨西哥/南非、瑞士/加拿大、巴西/摩洛哥出线），D/E/F 组第 3 轮 6/25 进行中，G–L 组第 2 轮已结束、第 3 轮 6/26–27。积分榜按真实比分实时计算排序。</strong>
+  <strong>小组赛（6/11–6/27）已全部结束，32 队晋级淘汰赛。</strong>赛制：32 强(6/28–7/3) → 16 强(7/4 起) → 8 强 → 4 强 → 决赛(7/19)。
+  ⚠️ 部分小组末轮（D–L 组）比分暂无权威一致来源，故这几组积分榜停留在<strong>已核实轮次</strong>；各队实际晋级情况以下方 <strong>32 强对阵</strong>为准。
 </div>
 
+<h2 class="sec">🏆 淘汰赛 · 32 强 (Round of 32)</h2>
+<div class="ko" id="ko"></div>
+<p class="ko-note">绿色 = 晋级；「点」= 点球大战。16 强定于 7/4–7/7 开踢。<strong>巴拉圭点球淘汰德国、摩洛哥点球淘汰荷兰</strong>为本轮最大冷门。</p>
+
+<h2 class="sec">小组赛 · 各组积分榜</h2>
 <div class="groups" id="groups"></div>
 
 <p class="legend-note">绿色分隔线下方为小组第 3、第 4 名；第 3 名仍有机会以「最佳第三名」身份晋级。</p>
 
 <div class="footer">
   数据来源：FIFA 官方抽签 / Wikipedia《2026 FIFA World Cup draw》。<br>
-  分组与赛制以官方为准；小组赛各轮日期为大致区间，具体场次时间以 FIFA 赛程为准。比分来源：FIFA / Wikipedia 各组专页。更新于 2026 年 6 月 25 日。
+  淘汰赛对阵与前 8 场比分经 Wikipedia / FIFA / ESPN 多源确认；D–L 组末轮比分因来源不一致暂未采信（宁缺勿编）。比分来源：FIFA / Wikipedia。更新于 2026 年 7 月 2 日。
 </div>
 
 </div><!-- container -->
@@ -201,6 +222,44 @@ Object.keys(GROUPS).forEach(gid => {
 
   box.innerHTML = html;
   wrap.appendChild(box);
+});
+
+// ===== 淘汰赛 32 强 =====
+const FLAG = {};
+Object.values(GROUPS).forEach(g => g.forEach(t => { FLAG[t[0]] = t[1]; }));
+
+const R32 = [
+  {a:"南非",b:"加拿大",sa:0,sb:1,win:"b",dt:"6/28"},
+  {a:"巴西",b:"日本",sa:2,sb:1,win:"a",dt:"6/29"},
+  {a:"德国",b:"巴拉圭",sa:1,sb:1,pen:"点 3-4",win:"b",dt:"6/29"},
+  {a:"荷兰",b:"摩洛哥",sa:1,sb:1,pen:"点 2-3",win:"b",dt:"6/29"},
+  {a:"科特迪瓦",b:"挪威",sa:1,sb:2,win:"b",dt:"6/30"},
+  {a:"法国",b:"瑞典",sa:3,sb:0,win:"a",dt:"6/30"},
+  {a:"墨西哥",b:"厄瓜多尔",sa:2,sb:0,win:"a",dt:"6/30"},
+  {a:"英格兰",b:"刚果(金)",sa:2,sb:1,win:"a",dt:"7/1"},
+  {a:"美国",b:"波黑",st:"美国晋级·比分待核"},
+  {a:"比利时",b:"塞内加尔",st:"比利时加时晋级·待核"},
+  {a:"葡萄牙",b:"克罗地亚",st:"7/2 进行中"},
+  {a:"西班牙",b:"奥地利",st:"7/2 进行中"},
+  {a:"瑞士",b:"阿尔及利亚",st:"7/2 待赛"},
+  {a:"哥伦比亚",b:"加纳",st:"7/3 待赛"},
+  {a:"阿根廷",b:"佛得角",st:"7/3 待赛"},
+  {a:"澳大利亚",b:"埃及",st:"7/3 待赛"},
+];
+
+const koWrap = document.getElementById("ko");
+R32.forEach(m => {
+  const el = document.createElement("div");
+  el.className = "m" + (m.sa != null ? " done" : "");
+  if (m.dt) el.title = m.dt;
+  const mid = (m.sa != null)
+    ? '<div class="sc">' + m.sa + ' - ' + m.sb + (m.pen ? '<span class="pen">' + m.pen + '</span>' : '') + '</div>'
+    : '<div class="st">' + m.st + '</div>';
+  el.innerHTML =
+    '<span class="side"><span class="flag">' + (FLAG[m.a] || "") + '</span><span class="' + (m.win === "a" ? "win" : "") + '">' + m.a + '</span></span>' +
+    mid +
+    '<span class="side b"><span class="' + (m.win === "b" ? "win" : "") + '">' + m.b + '</span><span class="flag">' + (FLAG[m.b] || "") + '</span></span>';
+  koWrap.appendChild(el);
 });
 </script>
 </body>
