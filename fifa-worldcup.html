@@ -108,13 +108,13 @@
 </div>
 
 <div class="note-box">
-  <strong>小组赛（6/11–6/27）已全部结束，32 队晋级淘汰赛。</strong>赛制：32 强(6/28–7/3) → 16 强(7/4 起) → 8 强 → 4 强 → 决赛(7/19)。
-  ⚠️ 部分小组末轮（D–L 组）比分暂无权威一致来源，故这几组积分榜停留在<strong>已核实轮次</strong>；各队实际晋级情况以下方 <strong>32 强对阵</strong>为准。
+  <strong>截至 7 月 4 日：32 强收官（仅 哥伦比亚-加纳 待确认），16 强今日开踢。</strong>赛制：16 强(7/4–7/7) → 8 强(7/9–7/11) → 4 强 → 决赛(7/19)。冷门：<strong>巴拉圭/摩洛哥点球淘汰德国/荷兰、埃及点球淘汰澳大利亚</strong>。
+  ⚠️ 部分小组末轮（D–L 组）比分暂无权威一致来源，相关小组积分榜停留在<strong>已核实轮次</strong>；晋级情况以对阵图为准。
 </div>
 
 <h2 class="sec">🏆 淘汰赛对阵图 (Knockout Bracket)</h2>
 <div class="bracket-scroll"><div class="bracket" id="bracket"></div></div>
-<p class="ko-note">绿色 = 已晋级；「点」= 点球大战；✓ = 已晋级(比分待核)。<strong>巴拉圭点球淘汰德国、摩洛哥点球淘汰荷兰</strong>为最大冷门。16 强 5 场已定；8 强及以后为对阵树骨架、队伍待定；下半区部分 32 强 7/2–7/3 才结束。</p>
+<p class="ko-note">绿色 = 晋级方；「点」= 点球大战。16 强 8 场对阵已定（7/4–7/7 开踢，暂无比分）；8 强及以后为对阵树骨架、队伍待定。唯 哥伦比亚-加纳（R32）比分待确认，故瑞士的 16 强对手暂空。</p>
 
 <h2 class="sec">小组赛 · 各组积分榜</h2>
 <div class="groups" id="groups"></div>
@@ -123,7 +123,7 @@
 
 <div class="footer">
   数据来源：FIFA 官方抽签 / Wikipedia《2026 FIFA World Cup draw》。<br>
-  淘汰赛对阵与前 8 场比分经 Wikipedia / FIFA / ESPN 多源确认；D–L 组末轮比分因来源不一致暂未采信（宁缺勿编）。比分来源：FIFA / Wikipedia。更新于 2026 年 7 月 2 日。
+  淘汰赛对阵树与 32 强比分经 Wikipedia / FIFA / ESPN 多源确认；哥伦比亚-加纳 及 D–L 组末轮比分暂无一致来源，未采信（宁缺勿编）。比分来源：FIFA / Wikipedia。更新于 2026 年 7 月 4 日。
 </div>
 
 </div><!-- container -->
@@ -258,14 +258,14 @@ const R32 = [
   {t1:T("法国"),t2:T("瑞典"),s1:3,s2:0,win:1},
   {t1:T("墨西哥"),t2:T("厄瓜多尔"),s1:2,s2:0,win:1},
   {t1:T("英格兰"),t2:T("刚果(金)"),s1:2,s2:1,win:1},
-  {t1:T("美国"),t2:T("波黑"),win:1,note:"待核"},
-  {t1:T("比利时"),t2:T("塞内加尔"),win:1,note:"加时·待核"},
-  {t1:T("葡萄牙"),t2:T("克罗地亚"),note:"进行中"},
-  {t1:T("西班牙"),t2:T("奥地利"),note:"进行中"},
-  {t1:T("哥伦比亚"),t2:T("加纳"),note:"7/3"},
-  {t1:T("瑞士"),t2:T("阿尔及利亚"),note:"7/3"},
-  {t1:T("阿根廷"),t2:T("佛得角"),note:"7/3"},
-  {t1:T("澳大利亚"),t2:T("埃及"),note:"7/3"},
+  {t1:T("美国"),t2:T("波黑"),s1:2,s2:0,win:1},
+  {t1:T("比利时"),t2:T("塞内加尔"),s1:3,s2:2,win:1,note:"加时"},
+  {t1:T("葡萄牙"),t2:T("克罗地亚"),s1:2,s2:1,win:1},
+  {t1:T("西班牙"),t2:T("奥地利"),s1:3,s2:0,win:1},
+  {t1:T("哥伦比亚"),t2:T("加纳"),note:"7/3 待确认"},
+  {t1:T("瑞士"),t2:T("阿尔及利亚"),s1:2,s2:0,win:1},
+  {t1:T("阿根廷"),t2:T("佛得角"),s1:3,s2:2,win:1,note:"加时"},
+  {t1:T("澳大利亚"),t2:T("埃及"),s1:1,s2:1,pen:"点 2-4",win:2},
 ];
 const wOf = m => m && m.win ? (m.win === 1 ? m.t1 : m.t2) : null;
 
@@ -329,7 +329,7 @@ rounds.forEach((round, r) => {
       html += '<div class="bk-r">' + nm + '<span class="bk-s">' + scc + '</span></div>';
     });
     if (m.pen) html += '<div class="bk-x">' + m.pen + '</div>';
-    else if (m.note && m.s1 == null) html += '<div class="bk-x g">' + m.note + '</div>';
+    else if (m.note) html += '<div class="bk-x g">' + m.note + '</div>';
     box.innerHTML = html;
     host.appendChild(box);
   });
