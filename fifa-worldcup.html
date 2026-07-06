@@ -108,13 +108,13 @@
 </div>
 
 <div class="note-box">
-  <strong>截至 7 月 4 日：32 强收官（仅 哥伦比亚-加纳 待确认），16 强今日开踢。</strong>赛制：16 强(7/4–7/7) → 8 强(7/9–7/11) → 4 强 → 决赛(7/19)。冷门：<strong>巴拉圭/摩洛哥点球淘汰德国/荷兰、埃及点球淘汰澳大利亚</strong>。
+  <strong>截至 7 月 6 日：16 强已赛 4 场——摩洛哥、法国、挪威、英格兰晋级 8 强。</strong>赛制：16 强(7/4–7/7) → 8 强(7/9–7/11) → 4 强 → 决赛(7/19)。冷门：<strong>挪威 2-1 淘汰巴西（哈兰德双响）</strong>、摩洛哥 3-0 加拿大。8 强首场 <strong>法国 vs 摩洛哥（7/9）</strong>。
   ⚠️ 部分小组末轮（D–L 组）比分暂无权威一致来源，相关小组积分榜停留在<strong>已核实轮次</strong>；晋级情况以对阵图为准。
 </div>
 
 <h2 class="sec">🏆 淘汰赛对阵图 (Knockout Bracket)</h2>
 <div class="bracket-scroll"><div class="bracket" id="bracket"></div></div>
-<p class="ko-note">绿色 = 晋级方；「点」= 点球大战。16 强 8 场对阵已定（7/4–7/7 开踢，暂无比分）；8 强及以后为对阵树骨架、队伍待定。唯 哥伦比亚-加纳（R32）比分待确认，故瑞士的 16 强对手暂空。</p>
+<p class="ko-note">绿色 = 晋级方；「点」= 点球大战。16 强已赛 4 场（上半区），下半区 4 场 7/6–7/7 进行；8 强已定首场 <strong>法国 vs 摩洛哥</strong>，其余待 16 强产生。</p>
 
 <h2 class="sec">小组赛 · 各组积分榜</h2>
 <div class="groups" id="groups"></div>
@@ -123,7 +123,7 @@
 
 <div class="footer">
   数据来源：FIFA 官方抽签 / Wikipedia《2026 FIFA World Cup draw》。<br>
-  淘汰赛对阵树与 32 强比分经 Wikipedia / FIFA / ESPN 多源确认；哥伦比亚-加纳 及 D–L 组末轮比分暂无一致来源，未采信（宁缺勿编）。比分来源：FIFA / Wikipedia。更新于 2026 年 7 月 4 日。
+  淘汰赛对阵树与 R32/R16 比分经 Wikipedia / FIFA / ESPN / CNN 多源确认；7/6–7/7 未踢场次与 D–L 组末轮比分暂未采信（宁缺勿编）。比分来源：FIFA / Wikipedia / ESPN。更新于 2026 年 7 月 6 日。
 </div>
 
 </div><!-- container -->
@@ -252,17 +252,17 @@ const T = n => ({ n: n, c: FLAG[n] });
 const R32 = [
   {t1:T("南非"),t2:T("加拿大"),s1:0,s2:1,win:2},
   {t1:T("荷兰"),t2:T("摩洛哥"),s1:1,s2:1,pen:"点 2-3",win:2},
-  {t1:T("巴西"),t2:T("日本"),s1:2,s2:1,win:1},
-  {t1:T("科特迪瓦"),t2:T("挪威"),s1:1,s2:2,win:2},
   {t1:T("德国"),t2:T("巴拉圭"),s1:1,s2:1,pen:"点 3-4",win:2},
   {t1:T("法国"),t2:T("瑞典"),s1:3,s2:0,win:1},
+  {t1:T("巴西"),t2:T("日本"),s1:2,s2:1,win:1},
+  {t1:T("科特迪瓦"),t2:T("挪威"),s1:1,s2:2,win:2},
   {t1:T("墨西哥"),t2:T("厄瓜多尔"),s1:2,s2:0,win:1},
   {t1:T("英格兰"),t2:T("刚果(金)"),s1:2,s2:1,win:1},
   {t1:T("美国"),t2:T("波黑"),s1:2,s2:0,win:1},
   {t1:T("比利时"),t2:T("塞内加尔"),s1:3,s2:2,win:1,note:"加时"},
   {t1:T("葡萄牙"),t2:T("克罗地亚"),s1:2,s2:1,win:1},
   {t1:T("西班牙"),t2:T("奥地利"),s1:3,s2:0,win:1},
-  {t1:T("哥伦比亚"),t2:T("加纳"),note:"7/3 待确认"},
+  {t1:T("哥伦比亚"),t2:T("加纳"),s1:1,s2:0,win:1},
   {t1:T("瑞士"),t2:T("阿尔及利亚"),s1:2,s2:0,win:1},
   {t1:T("阿根廷"),t2:T("佛得角"),s1:3,s2:2,win:1,note:"加时"},
   {t1:T("澳大利亚"),t2:T("埃及"),s1:1,s2:1,pen:"点 2-4",win:2},
@@ -270,10 +270,24 @@ const R32 = [
 const wOf = m => m && m.win ? (m.win === 1 ? m.t1 : m.t2) : null;
 
 // 由 R32 推演后续各轮（相邻配对；未定则占位）
+// 后续各轮已踢结果（轮次→该轮场次序号→{比分/点球/胜方/备注}）
+const KO_RES = {
+  1: { // 16 强（7/4–7/7）
+    0:{s1:0,s2:3,win:2},   // 加拿大 0-3 摩洛哥
+    1:{s1:0,s2:1,win:2},   // 巴拉圭 0-1 法国
+    2:{s1:1,s2:2,win:2},   // 巴西 1-2 挪威
+    3:{s1:1,s2:3,win:2},   // 墨西哥 1-3 英格兰
+    4:{note:"7/6"},        // 美国 vs 比利时
+    5:{note:"7/6"},        // 葡萄牙 vs 西班牙
+    6:{note:"7/7"},        // 哥伦比亚 vs 瑞士
+    7:{note:"7/7"},        // 阿根廷 vs 埃及
+  },
+};
 const rounds = [R32];
 for (let r = 1; r < 5; r++) {
   const prev = rounds[r-1], cur = [];
   for (let j = 0; j < prev.length/2; j++) cur.push({ t1: wOf(prev[2*j]), t2: wOf(prev[2*j+1]) });
+  if (KO_RES[r]) Object.entries(KO_RES[r]).forEach(([j, res]) => Object.assign(cur[j], res));
   rounds.push(cur);
 }
 
